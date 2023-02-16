@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react';
 import './App.css';
 
 //Module for navbar, copied from Bootstrap and modified
@@ -38,4 +39,30 @@ function Body() {
   );
 }
 
-export { Navbar, Body };
+function App() {
+  const [inputs, setInputs] = useState({
+    name: '',
+    job: ''
+  })
+
+  const handleClick = () => {
+      const name = document.querySelector("input[name='name']").value
+      const job = document.querySelector("input[name='job']").value
+      setInputs({name: name, job: job})
+  }
+  return( 
+    <div>
+      <form>
+        <label>Name</label>
+        <input type="text" name='name' /><br></br>
+        <label>Job</label>
+        <input type="text" name='job'  /><br></br>
+        <button type='button' onClick={handleClick}>Submit</button>
+      </form>
+
+      <h1>Hi, my name is {inputs.name}</h1>
+      <h3>My job is {inputs.job}</h3>
+    </div>)
+}
+
+export { Navbar, Body, App };
