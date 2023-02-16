@@ -39,17 +39,24 @@ function Body() {
   );
 }
 
+//Component where the input and output runs
 function App() {
+  //useState for multiple inputs: name and job, in an object
   const [inputs, setInputs] = useState({
     name: '',
     job: ''
   })
 
+  //function to handle onClick button
+  //where it gets the input from input field
+  //and set it to the vars in useState object inputs
   const handleClick = () => {
       const name = document.querySelector("input[name='name']").value
       const job = document.querySelector("input[name='job']").value
       setInputs({name: name, job: job})
   }
+
+  //HTML (JSX)
   return( 
     <div>
       <form>
@@ -65,4 +72,5 @@ function App() {
     </div>)
 }
 
+//Exporting components to index.js
 export { Navbar, Body, App };

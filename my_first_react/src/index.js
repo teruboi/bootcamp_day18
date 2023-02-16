@@ -10,10 +10,13 @@ import './index.css';
 function render(content, id) {
   ReactDOM.render(content, document.getElementById(id))
 }
+
+//Rendering to root using createRoot
 const el = document.getElementById("root")
 const root = ReactDOM.createRoot(el)
 
-root.render(<App name="Rey" job="Professional Procrastinator" />)
+//Rendering App component
+root.render(<App/>)
 //Renderer
 // render(<Navbar />, "navbar")
 // render(<Body />, "root")
