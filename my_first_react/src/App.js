@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import moment from "moment";
 import './App.css';
 
 //Module for navbar, copied from Bootstrap and modified
@@ -39,37 +40,56 @@ function Body() {
   );
 }
 
-//Component where the input and output runs
-function App() {
-  //useState for multiple inputs: name and job, in an object
-  const [inputs, setInputs] = useState({
-    name: '',
-    job: ''
-  })
+//Component for the main chat / comment app
+function App(props) {
 
-  //function to handle onClick button
-  //where it gets the input from input field
-  //and set it to the vars in useState object inputs
-  const handleClick = () => {
-      const name = document.querySelector("input[name='name']").value
-      const job = document.querySelector("input[name='job']").value
-      setInputs({name: name, job: job})
-  }
+  //Calling the data from props
+  const data = props.data
+  // console.log(data);
+
+  //Looping return for each data in the array
+  const comments = data.map((e) => {
+
+    //Configuring past day until present
+    const date = moment().format()
+    const diff = moment(date).diff(e.time, 'days')
+
+    let day
+
+    //If the day difference between today and comment date is 0
+    //prints out "Today"
+    //else prints out "... days ago"
+    if (diff === 0) {
+      day = 'Today'
+    } else {
+      day = moment(date).to(e.time)
+    }
+
+    //Returning the whole comment component
+    return(
+      <div class="comment">
+        <a class="avatar">
+          <img alt='avatar' src={e.avatar} />
+        </a>
+        <div class="content">
+          <a class="author" >{e.name}</a>
+          <div class="metadata">
+            <span class="date">{day} at {moment(e.time).format('LT')}</span>
+          </div>
+          <div class="text">
+            {e.comment}
+          </div>
+        </div>
+      </div>
+    )  
+  })
 
   //HTML (JSX)
   return( 
-    <div>
-      <form>
-        <label>Name</label>
-        <input type="text" name='name' /><br></br>
-        <label>Job</label>
-        <input type="text" name='job'  /><br></br>
-        <button type='button' onClick={handleClick}>Submit</button>
-      </form>
-
-      <h1>Hi, my name is {inputs.name}</h1>
-      <h3>My job is {inputs.job}</h3>
-    </div>)
+    <div class="ui comments">
+      {comments}
+    </div>
+  )
 }
 
 //Exporting components to index.js
