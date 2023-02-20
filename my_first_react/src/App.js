@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import moment from "moment";
 import './App.css';
 
@@ -92,5 +92,122 @@ function App(props) {
   )
 }
 
+//Class for the comment container,
+//converted from the function above
+class CommentContainer extends React.Component {
+  //Props used in the class
+  //In this case, the comment data
+  //(Name, Likes, Date, Comment, PP)
+  constructor (props) {
+    super(props)
+    this.state = {
+      count: parseInt(this.props.likes)
+    }
+  }
+  render() {
+    return (
+      <div className='ui container comments'>
+        <div className='comment'>
+          <a href='/' className='avatar'>
+            <img alt='avatar' src={this.props.avatar} />
+          </a>
+          <div className='content'>
+            <a href='/' className='author' style={{textDecoration: "none"}}>
+              {this.props.name}
+              <div className='metadata'>
+                <span className='date'>
+                  {this.props.day} at {this.props.time}
+                </span>
+              </div>
+              {/* Likes count */}
+              | Likes: {this.state.count}
+            </a>
+            <div className='text'>
+              {this.props.comment}
+            </div>
+            {/* Button for adding 1 like to Likes */}
+            <div className='mini ui icon red button' onClick={()=>this.setState({ count: this.state.count + 1 })}>
+              <i className='heart icon'></i> Like
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+//Calling the CommentContainer component with
+//props from database
+class Comments extends React.Component {
+  render() {
+    return this.props.data.map((dataComment, index) => (
+      <div className='CommentContainer' key={index}>
+        <CommentContainer
+          avatar={dataComment.avatar}
+          name={dataComment.name}
+          day={moment(dataComment.time).format("ddd")}
+          time={moment(dataComment.time).format("LT")}
+          comment={dataComment.comment}
+          likes={dataComment.like}
+        />
+      </div>
+    ))
+  }
+}
+
+//Example of data counting dynamically
+class Counting extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      count: 0
+    }
+  }
+  render() {
+    return (
+      <div>
+        <h1>you clicked {this.state.count} times</h1>
+        <button onClick={()=>this.setState({ count: this.state.count + 1 })}>click on me!</button>
+      </div>
+    )
+  }
+}
+
+//Show time
+class Clock extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      date: new Date()
+    }
+  }
+  
+  componentDidMount() {
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID)
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>
+          {this.state.date.toLocaleTimeString()}.
+        </h1>
+      </div>
+    )
+  }
+}
 //Exporting components to index.js
-export { Navbar, Body, App };
+export { Navbar, Body, App, CommentContainer, Comments, Counting, Clock };

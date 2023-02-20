@@ -1,10 +1,11 @@
 //Importing React modules for rendering
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { faker } from "@faker-js/faker";
+import moment from 'moment';
 
 //Importing components from App.js
-import { Navbar, Body, App } from './App';
+import { Navbar, Body, Comments, Counting, Clock } from './App';
 import './index.css';
 
 //Function to simplify rendering to HTML
@@ -18,19 +19,22 @@ const data = [
     name: faker.name.firstName(),
     avatar: faker.image.avatar(),
     time: faker.date.recent(3),
-    comment: faker.lorem.lines(1)
+    comment: faker.lorem.lines(1),
+    like: faker.random.numeric()
   },
   {
     name: faker.name.firstName(),
     avatar: faker.image.avatar(),
     time: faker.date.recent(3),
-    comment: faker.lorem.lines(1)
+    comment: faker.lorem.lines(1),
+    like: faker.random.numeric()
   },
   {
     name: faker.name.firstName(),
     avatar: faker.image.avatar(),
     time: faker.date.recent(3),
-    comment: faker.lorem.lines(1)
+    comment: faker.lorem.lines(1),
+    like: faker.random.numeric()
   }
 ]
 
@@ -38,8 +42,18 @@ const data = [
 const el = document.getElementById("root")
 const root = ReactDOM.createRoot(el)
 
+//Calling Comments component to App
+const App = () => {
+  return (
+    <div>
+      {<Comments data={data} />}
+    </div>
+  )
+}
+
 //Rendering App component
-root.render(<App data={data}/>)
+render(<Clock />, "clock")
+render(<App data={data} />, "root")
 //Renderer
 // render(<Navbar />, "navbar")
 // render(<Body />, "root")
