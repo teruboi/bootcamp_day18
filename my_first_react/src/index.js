@@ -6,7 +6,7 @@ import moment from 'moment';
 
 
 //Importing components from App.js
-import { App, Navbar, Body, Comments, Counting, Clock, Form, SearchBar } from './App';
+import { App, Navbar, Body, Comments, Counting, Clock, Form, SearchBar, CustomTextInput } from './App';
 import './index.css';
 
 

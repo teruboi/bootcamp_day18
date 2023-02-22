@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import moment from "moment";
 import './App.css';
 //importing unsplash API to be used in here
-import unsplash from './unsplash';
+import youtube from './youtube';
 
 
 
@@ -37,38 +37,96 @@ function Navbar() {
 
 //Component for the main app
 class App extends React.Component {
-  //Where the image data will be stored
-  //from unsplash.com
-  state = { images: [] }
+  //Where the video data will be stored
+  //from youtube.com
+  constructor(props) {
+    super(props);
+    this.state = {
+      videos: [],
+      selectedVideo: null
+    }
+  }
   
   //function to find image associated with the query
   //on unsplash.com, then set the data to state.images
   //above.
   onSearchSubmit = async (term) => {
-    const response = await unsplash.get("/search/photos", {
-      params: { query: term }
+    const response = await youtube.get("/search", {
+      params: { q: term }
     })
 
-    this.setState({ images: response.data.results })
-    console.log(this.state.images);
+    this.setState({ 
+      videos: response.data.items,
+      selectedVideo: response.data.items[0]
+    })
+    console.log(this.state);
+  }
+
+  handleVideoSelect = (video) => {
+    this.setState({selectedVideo: video})
   }
 
   //rendering the HTML body
   render() {
     return (
-      <div className='ui fluid container centered'>
-        <div className='ui container' style={{ marginTop: '10px' }}>
-          {/* Component searchBar for query input, that will be used for search the images */}
-          <SearchBar onSubmit={this.onSearchSubmit} />
-        </div>
-        <div className='ui grid centered container' style={{ marginTop: '10px', alignContent: 'center'}}>
-          {/* Component for rendering the images called from API */}
-          <Images data={this.state.images} />
+      <div className='ui container'>
+          {/* Component searchBar for query input, that will be used for search the videos */}
+        <SearchBar onSubmit={this.onSearchSubmit} />
+        <div className='ui grid'>
+          {/* Component for rendering the videos called from API */}
+          <div className='ui row'>
+            <div className='eleven wide column'>
+              <VideoSelected video={this.state.selectedVideo} />
+            </div>
+            <div className='five wide column'>
+              <VideoList handleVideoSelect={this.handleVideoSelect} videos={this.state.videos} />
+            </div>
+          </div>
         </div>
       </div>
-    
     )
   }
+}
+
+const VideoList = ({ videos , handleVideoSelect }) => {
+  return (
+    <div className='ui relaxed divided list'>
+      {videos.map((e) => {
+        return <VideoItem key={e.id.videoId} video={e} handleVideoSelect={handleVideoSelect} />
+      })}
+    </div>
+  )
+};
+
+const VideoItem = ({video , handleVideoSelect}) => {
+  return (
+      <div onClick={ () => handleVideoSelect(video)} className=' video-item item'>
+          <img className='ui image' src={video.snippet.thumbnails.medium.url} alt={video.snippet.description}/>
+          <div className='content'>
+              <div className='header '>{video.snippet.title}</div>
+          </div>
+      </div>
+  )
+};
+
+const VideoSelected = ({ video }) => {
+  if (!video) {
+    return <div>Loading ...</div>;
+  }
+
+  const videoSrc = `https://www.youtube.com/embed/${video.id.videoId}`;
+  console.log(typeof(video));
+  return (
+      <div>
+          <div className='ui embed'>
+              <iframe src={videoSrc} allowFullScreen title='Video player'/>
+          </div>
+          <div className='ui segment'>
+              <h4 className='ui header'>{video.snippet.title}</h4>
+              <p>{video.snippet.description}</p>
+          </div>
+      </div>
+  )
 }
 
 //Images renderer
@@ -86,6 +144,8 @@ class Images extends React.Component {
     );
   }
 }
+
+
 
 //Show time
 class Clock extends React.Component {
@@ -129,18 +189,21 @@ class Clock extends React.Component {
 class Form extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { value: "" }
+    this.inputField = createRef()
 
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+
+    this.state = { value: "" }
   }
 
   handleChange(event) {
     this.setState({ value: event.target.value })
+    console.log(this.inputField.current.value);
   }
 
   handleSubmit(event) {
-    alert("A name was submitted: " + this.state.value)
+    alert("A name was submitted: " + this.inputField.current.value)
     event.preventDefault()
   }
 
@@ -151,7 +214,7 @@ class Form extends React.Component {
           Name:
           <input
             type="text"
-            value={this.state.value}
+            ref={this.inputField}
             onChange={this.handleChange}
           />
         </label>
@@ -164,8 +227,11 @@ class Form extends React.Component {
 //Component to add search bar to body that
 // will call the function in props
 class SearchBar extends React.Component{
-  state = { term: "" }
-
+  constructor(props) {
+    super(props);
+    this.state = { term: "" }
+    this.onFormSubmit = this.onFormSubmit.bind(this)
+  }
   //The function calls for another function
   //called in the component props
   onFormSubmit = (event) => {
@@ -192,5 +258,41 @@ class SearchBar extends React.Component{
     )
   }
 }
+
+class CustomTextInput extends React.Component {
+  constructor(props) {
+    super(props);
+    // create a ref to store the textInput DOM element
+    this.textInput = React.createRef();
+    this.focusTextInput = this.focusTextInput.bind(this);
+  }
+
+  focusTextInput() {
+    // Explicitly focus the text input using the raw DOM API
+    // Note: we're accessing "current" to get the DOM node
+    this.textInput.current.focus();
+  }
+
+  render() {
+    // tell React that we want to associate the <input> ref
+    // with the `textInput` that we created in the constructor
+    return (
+      <div>
+        <input
+          type="text"
+          value={this.textInput.current}
+          ref={this.textInput} />
+        <input
+          type="button"
+          value="Focus the text input"
+          onClick={this.focusTextInput}
+        />
+        <span>
+
+        </span>
+      </div>
+    );
+  }
+}
 //Exporting components to index.js
-export { Navbar, Body, App, CommentContainer, Comments, Counting, Clock, Form, SearchBar };
+export { Navbar, App, Clock, Form, SearchBar, CustomTextInput };
