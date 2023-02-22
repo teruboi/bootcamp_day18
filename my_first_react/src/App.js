@@ -229,6 +229,7 @@ class Form extends React.Component {
 class SearchBar extends React.Component{
   constructor(props) {
     super(props);
+    this.textInput = createRef()
     this.state = { term: "" }
     this.onFormSubmit = this.onFormSubmit.bind(this)
   }
@@ -236,7 +237,7 @@ class SearchBar extends React.Component{
   //called in the component props
   onFormSubmit = (event) => {
     event.preventDefault()
-
+    this.setState({ term: this.textInput.current.value })
     this.props.onSubmit(this.state.term)
   }
 
@@ -249,8 +250,7 @@ class SearchBar extends React.Component{
             <label>Image Search</label>
             <input
               type='text'
-              value={this.state.term}
-              onChange={(e) => this.setState({ term: e.target.value })}
+              ref={this.textInput}
             />
           </div>
         </form>
