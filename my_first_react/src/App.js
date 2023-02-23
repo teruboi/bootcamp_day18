@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React, { createRef, useState, useEffect } from 'react';
 import moment from "moment";
 import './App.css';
 //importing unsplash API to be used in here
@@ -184,6 +184,33 @@ class Clock extends React.Component {
   }
 }
 
+// function Clock() {
+//   const [date, setDate] = useState(new Date())
+
+//   useEffect(() => {
+//     function tick() {
+//       setDate(new Date())
+//     }
+
+//     const timerID = setInterval(
+//       () => tick(),
+//       1000
+//     )
+    
+//     return () => {
+//       clearInterval(timerID)
+//     };
+//   });
+
+//   return (
+//     <div>
+//       <h1>
+//         {date.toLocaleTimeString()}.
+//       </h1>
+//     </div>
+//   )
+// }
+
 //Component for handling form input
 //In this case for submitting name
 class Form extends React.Component {
@@ -231,14 +258,14 @@ class SearchBar extends React.Component{
     super(props);
     this.textInput = createRef()
     this.state = { term: "" }
-    this.onFormSubmit = this.onFormSubmit.bind(this)
   }
   //The function calls for another function
   //called in the component props
   onFormSubmit = (event) => {
     event.preventDefault()
     this.setState({ term: this.textInput.current.value })
-    this.props.onSubmit(this.state.term)
+    console.log(this.textInput.current.value);
+    this.props.onSubmit(this.textInput.current.value)
   }
 
   //Rendering the search bar body to HTML

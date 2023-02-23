@@ -17,6 +17,7 @@ function render(content, id) {
 }
 
 //Rendering App component
+// render(<Clock />, "clock")
 render(<App />, "root")
 //Renderer
 // render(<Navbar />, "navbar")
