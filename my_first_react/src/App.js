@@ -148,68 +148,32 @@ class Images extends React.Component {
 
 
 //Show time
-class Clock extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      date: new Date()
+function Clock() {
+  const [date, setDate] = useState(new Date())
+
+  useEffect(() => {
+    function tick() {
+      setDate(new Date())
     }
-  }
-  
-  componentDidMount() {
-    this.timerID = setInterval(
-      () => this.tick(),
+
+    const timerID = setInterval(
+      () => tick(),
       1000
-    );
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerID)
-  }
-
-  tick() {
-    this.setState({
-      date: new Date()
-    });
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>
-          {this.state.date.toLocaleTimeString()}.
-        </h1>
-      </div>
     )
-  }
-}
-
-// function Clock() {
-//   const [date, setDate] = useState(new Date())
-
-//   useEffect(() => {
-//     function tick() {
-//       setDate(new Date())
-//     }
-
-//     const timerID = setInterval(
-//       () => tick(),
-//       1000
-//     )
     
-//     return () => {
-//       clearInterval(timerID)
-//     };
-//   });
+    return () => {
+      clearInterval(timerID)
+    };
+  });
 
-//   return (
-//     <div>
-//       <h1>
-//         {date.toLocaleTimeString()}.
-//       </h1>
-//     </div>
-//   )
-// }
+  return (
+    <div>
+      <h1>
+        {date.toLocaleTimeString()}.
+      </h1>
+    </div>
+  )
+}
 
 //Component for handling form input
 //In this case for submitting name
