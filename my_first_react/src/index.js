@@ -1,37 +1,17 @@
-//Importing React and ReactDOM libraries
-import React from 'react';
-import ReactDOM, { createRoot } from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import Home from './pages';
-import Contact from './pages/contact';
-import About from './pages/about';
-import Navbar from './navbar';
-import { Counter } from './counter/counter';
-import store from './store'
-import { Provider } from 'react-redux'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Provider } from'react-redux'
+import { createStore, applyMiddleware } from'redux'
+import thunk from'redux-thunk'
 
-function render(id, object) {
-  const root = createRoot(document.getElementById(id))
-  root.render(object)
-}
+import App from './App'
+import reducers from './reducers'
 
-//Create a function for navigation
-function App() {
-  return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" exact element={<Home />} />
-        <Route path="/about" exact element={<About />} />
-        <Route path="/contact" exact element={<Contact />} />
-        <Route path="/counter" exact element={<Counter />} />
-      </Routes>
-    </Router>    
-  );
-}
+const store = createStore(reducers, applyMiddleware(thunk))
 
-render('root', (
+ReactDOM.render(
   <Provider store={store}>
     <App />
-  </Provider>
-))
+  </Provider>,
+  document.querySelector('#root')
+);
