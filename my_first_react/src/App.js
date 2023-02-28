@@ -1,11 +1,11 @@
 import React from 'react'
-import PostList from './components/PostLists'
+import Form from './components/employeeForm'
 import './styles.css'
 
 export default function App() {
     return (
         <div className='ui container'>
-            <PostList />
+            <Form />
         </div>
     )
 }
